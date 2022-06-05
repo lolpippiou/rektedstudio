@@ -182,6 +182,7 @@ local Dropdown = Universal:AddDropdown("Give Tool", function(item)
     for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
         if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == item and v.Parent:FindFirstChild("GiverScript") then
             firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
         end
     end
 end)
