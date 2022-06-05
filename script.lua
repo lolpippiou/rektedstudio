@@ -94,4 +94,3 @@ Fighting:AddSwitch("Reach", function(on)
         end
     end
 end)
-Fighting
