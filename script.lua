@@ -136,12 +136,12 @@ Horizontal:AddButton("Kill NPCs", function()
     for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
         if v:IsA("Humanoid") and not game:GetService("Players"):GetPlayerFromCharacter(v.Parent) then
             spawn(function()
-                while Tool and game:GetService("Players").LocalPlayer.Character and v and Tool.Parent == game:GetService("Players").LocalPlayer.Character do
-                    local Human = v:FindFirstChildWhichIsA("Humanoid")
+                while Tool and game:GetService("Players").LocalPlayer.Character and v.Parent and Tool.Parent == game:GetService("Players").LocalPlayer.Character do
+                    local Human = v
                     if not Human or Human.Health <= 0 then
                         break
                     end
-                    for _, v1 in ipairs(v:GetChildren()) do
+                    for _, v1 in ipairs(v.Parent:GetChildren()) do
                         v1 = ((v1:IsA("BasePart") and firetouchinterest(Handle, v1, 1, (RS:Wait() and nil) or firetouchinterest(Handle, v1, 0)) and nil) or v1) or v1
                     end
                 end
