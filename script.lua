@@ -162,7 +162,7 @@ local Noclipping = nil
 Universal:AddSwitch("NoClip", function(on)
     if on then
         local function NoclipLoop()
-            if on == false and game:GetService("Players").LocalPlayer.Character ~= nil then
+            if game:GetService("Players").LocalPlayer.Character ~= nil then
                 for _, child in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
                     if child:IsA("BasePart") and child.CanCollide == true then
                         child.CanCollide = false
@@ -170,7 +170,7 @@ Universal:AddSwitch("NoClip", function(on)
                 end
             end
         end
-        Noclipping = game:GetService("RunService").Stepped:connect(NoclipLoop)
+        Noclipping = game:GetService('RunService').Stepped:Connect(NoclipLoop)
     else
         if Noclipping then
             Noclipping:Disconnect()
