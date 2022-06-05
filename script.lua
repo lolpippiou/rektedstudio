@@ -172,6 +172,22 @@ FightingHorizontal:AddButton("Kill All", function()
     end
 end)
 
-Universal:AddSwitch("CanCollide", function(on)
-    
+local Noclipping = nil
+Universal:AddSwitch("NoClip", function(on)
+    if on then
+        local function NoclipLoop()
+            if on == false and game:GetService("Players").LocalPlayer.Character ~= nil then
+                for _, child in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+                    if child:IsA("BasePart") and child.CanCollide == true then
+                        child.CanCollide = false
+                    end
+                end
+            end
+        end
+        Noclipping = game:GetService("RunService").Stepped:connect(NoclipLoop)
+    else
+        if Noclipping then
+            Noclipping:Disconnect()
+        end
+    end
 end)
