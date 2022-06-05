@@ -15,6 +15,7 @@ local WindowOptions = {
 local Window = library:AddWindow(name, WindowOptions)
 local Credits = Window:AddTab("Credits")
 local Fighting = Window:AddTab("Fighting Games")
+local Universal = Window:AddTab("Universal")
 
 Credits:AddLabel("Created by team c00lkidd")
 Credits:AddLabel("https://youtube.com/teamc00lkidd1")
@@ -109,8 +110,8 @@ for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
     end
 end
 
-local Horizontal = Fighting:AddHorizontalAlignment()
-Horizontal:AddButton("Kill Players", function()
+local FightingHorizontal = Fighting:AddHorizontalAlignment()
+FightingHorizontal:AddButton("Kill Players", function()
     local RS = game:GetService("RunService").RenderStepped
     local Tool = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool")
     local Handle = Tool and Tool:FindFirstChild("Handle")
@@ -128,7 +129,7 @@ Horizontal:AddButton("Kill Players", function()
         end)
     end
 end)
-Horizontal:AddButton("Kill NPCs", function()
+FightingHorizontal:AddButton("Kill NPCs", function()
     local RS = game:GetService("RunService").RenderStepped
     local Tool = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool")
     local Handle = Tool and Tool:FindFirstChild("Handle")
@@ -148,4 +149,29 @@ Horizontal:AddButton("Kill NPCs", function()
             end)
         end
     end
+end)
+FightingHorizontal:AddButton("Kill All", function()
+    local RS = game:GetService("RunService").RenderStepped
+    local Tool = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool")
+    local Handle = Tool and Tool:FindFirstChild("Handle")
+    
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if v:IsA("Humanoid") then
+            spawn(function()
+                while Tool and game:GetService("Players").LocalPlayer.Character and v.Parent and Tool.Parent == game:GetService("Players").LocalPlayer.Character do
+                    local Human = v
+                    if not Human or Human.Health <= 0 then
+                        break
+                    end
+                    for _, v1 in ipairs(v.Parent:GetChildren()) do
+                        v1 = ((v1:IsA("BasePart") and firetouchinterest(Handle, v1, 1, (RS:Wait() and nil) or firetouchinterest(Handle, v1, 0)) and nil) or v1) or v1
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+Universal:AddSwitch("CanCollide", function(on)
+    
 end)
