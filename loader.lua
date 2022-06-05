@@ -6,5 +6,7 @@ local function ontp(s)
     end
 end
 
+repeat wait() until game:IsLoaded()
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/lolpippiou/rektedstudio/main/script.lua"))()
 ontp([[loadstring(game:HttpGet("https://raw.githubusercontent.com/lolpippiou/rektedstudio/main/loader.lua"))()]])
