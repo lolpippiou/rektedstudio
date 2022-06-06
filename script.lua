@@ -179,34 +179,6 @@ Universal:AddSwitch("NoClip", function(on)
     end
 end)
 
-function ChangeTeam(SpawnPoint)
-	local Decal = SpawnPoint:FindFirstChildOfClass("Decal")
-	
-	local function MoveSpawn()
-		local Clone = SpawnPoint:Clone()
-		
-		SpawnPoint.CanCollide = false
-		SpawnPoint.Transparency = 1
-		SpawnPoint.CFrame = LocalPlayer.Character.Torso.CFrame
-		wait()
-		SpawnPoint.CFrame = Clone.CFrame
-		SpawnPoint.Transparency = Clone.Transparency
-		SpawnPoint.CanCollide = Clone.CanCollide
-		
-		Clone:Destroy()
-	end
-	
-	if (Decal) then
-		local DecalTransparency = Decal.Transparency
-		
-		Decal.Transparency = 1
-		MoveSpawn()
-		Decal.Transparency = DecalTransparency
-	else
-		MoveSpawn()
-	end
-end
-
 function FindAvailableTeams()
 	local AvailableTeams = {}
 	
@@ -214,7 +186,7 @@ function FindAvailableTeams()
 		if (Part:IsA("SpawnLocation") and Part.AllowTeamChangeOnTouch) then -- find team, should we get only one spawn or not
 			local Color = Part.TeamColor
 			
-			for _, Team in ipairs(Teams:GetChildren()) do
+			for _, Team in ipairs(game:GetService("Teams"):GetChildren()) do
 				if (Team.TeamColor == Color and not AvailableTeams[Team]) then
 					AvailableTeams[Team] = Part
 				end
@@ -228,7 +200,31 @@ end
 local spawns = Universal:AddDropdown("Join Team", function(name)
     for Team, SpawnPoint in pairs(FindAvailableTeams()) do
         if Team.Name == name then
-            ChangeTeam(SpawnPoint)
+            local Decal = SpawnPoint:FindFirstChildOfClass("Decal")
+	
+            local function MoveSpawn()
+                local Clone = SpawnPoint:Clone()
+                
+                SpawnPoint.CanCollide = false
+                SpawnPoint.Transparency = 1
+                SpawnPoint.CFrame = LocalPlayer.Character.Torso.CFrame
+                wait()
+                SpawnPoint.CFrame = Clone.CFrame
+                SpawnPoint.Transparency = Clone.Transparency
+                SpawnPoint.CanCollide = Clone.CanCollide
+                
+                Clone:Destroy()
+            end
+            
+            if (Decal) then
+                local DecalTransparency = Decal.Transparency
+                
+                Decal.Transparency = 1
+                MoveSpawn()
+                Decal.Transparency = DecalTransparency
+            else
+                MoveSpawn()
+            end
         end
     end
 end)
@@ -295,13 +291,12 @@ Tools:AddSwitch("Equip dropped items", function(on)
     local Human = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
     if on then
         for _, v in ipairs(workspace:GetChildren()) do
-            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") and v:FindFirstChild("Handle") then
+            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") then
                 Human:EquipTool(v)
             end
         end
-        if grabtoolsFunc then grabtoolsFunc:Disconnect() end
         grabtoolsFunc = workspace.ChildAdded:connect(function()
-            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") and v:FindFirstChild("Handle") then
+            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") then
                 game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
             end
         end)
