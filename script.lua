@@ -179,6 +179,64 @@ Universal:AddSwitch("NoClip", function(on)
     end
 end)
 
+function ChangeTeam(SpawnPoint)
+	local Decal = SpawnPoint:FindFirstChildOfClass("Decal")
+	
+	local function MoveSpawn()
+		local Clone = SpawnPoint:Clone()
+		
+		SpawnPoint.CanCollide = false
+		SpawnPoint.Transparency = 1
+		SpawnPoint.CFrame = LocalPlayer.Character.Torso.CFrame
+		wait()
+		SpawnPoint.CFrame = Clone.CFrame
+		SpawnPoint.Transparency = Clone.Transparency
+		SpawnPoint.CanCollide = Clone.CanCollide
+		
+		Clone:Destroy()
+	end
+	
+	if (Decal) then
+		local DecalTransparency = Decal.Transparency
+		
+		Decal.Transparency = 1
+		MoveSpawn()
+		Decal.Transparency = DecalTransparency
+	else
+		MoveSpawn()
+	end
+end
+
+function FindAvailableTeams()
+	local AvailableTeams = {}
+	
+	for _, Part in ipairs(workspace:GetDescendants()) do
+		if (Part:IsA("SpawnLocation") and Part.AllowTeamChangeOnTouch) then -- find team, should we get only one spawn or not
+			local Color = Part.TeamColor
+			
+			for _, Team in ipairs(Teams:GetChildren()) do
+				if (Team.TeamColor == Color and not AvailableTeams[Team]) then
+					AvailableTeams[Team] = Part
+				end
+			end
+		end
+	end
+	
+	return AvailableTeams
+end
+
+local spawns = Universal:AddDropdown("Join Team", function(name)
+    for Team, SpawnPoint in pairs(FindAvailableTeams()) do
+        if Team.Name == name then
+            ChangeTeam(SpawnPoint)
+        end
+    end
+end)
+
+for Team, SpawnPoint in pairs(FindAvailableTeams()) do
+    spawns:Add(Team.Name)
+end
+
 local selectedItem
 local Dropdown = Tools:AddDropdown("Give Tool", function(item)
     selectedItem = item
