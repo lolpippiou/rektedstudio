@@ -7,7 +7,7 @@ if identifyexecutor then
 end
 
 local WindowOptions = {
-    min_size = Vector2.new(400, 400),
+    min_size = Vector2.new(500, 400),
     toggle_key = Enum.KeyCode.RightShift,
     can_resize = true
 }
@@ -223,3 +223,74 @@ ToolsHorizontal:AddButton("Give Tool x100", function()
         end
     end
 end)
+ToolsHorizontal:AddButton("Give All", function()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Parent:FindFirstChild("GiverScript") then
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+        end
+    end
+end)
+
+local grabtoolsFunc
+Tools:AddSwitch("Equip dropped items", function(on)
+    local Human = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+    if on then
+        for _, v in ipairs(workspace:GetChildren()) do
+            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") and v:FindFirstChild("Handle") then
+                Human:EquipTool(v)
+            end
+        end
+        if grabtoolsFunc then grabtoolsFunc:Disconnect() end
+        grabtoolsFunc = workspace.ChildAdded:connect(function()
+            if game:GetService("Players").LocalPlayer.Character and v:IsA("BackpackItem") and v:FindFirstChild("Handle") then
+                game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(v)
+            end
+        end)
+    else
+        if grabtoolsFunc then grabtoolsFunc:Disconnect() end
+    end
+end)
+
+if workspace:FindFirstChild("McBloxxer") then
+    local mcbloxxer = Window:AddTab("McBloxxer")
+    local mcbloxxerhorizontal = mcbloxxer:AddHorizontalAlignment()
+    mcbloxxerhorizontal:AddButton("Give Cheeseburger", function()
+        fireclickdetector(game:GetService("Workspace").McBloxxer.Kitchen.Cheeseburger.Giver.ClickDetector)
+    end)
+    mcbloxxerhorizontal:AddButton("Give x10", function()
+        for i = 1, 10 do
+            fireclickdetector(game:GetService("Workspace").McBloxxer.Kitchen.Cheeseburger.Giver.ClickDetector)
+        end
+    end)
+    mcbloxxerhorizontal:AddButton("Give x100", function()
+        for i = 1, 100 do
+            fireclickdetector(game:GetService("Workspace").McBloxxer.Kitchen.Cheeseburger.Giver.ClickDetector)
+        end
+    end)
+    mcbloxxer:AddButton("Equip Tools", function()
+        for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+            if v:IsA("Tool") then
+                v.Parent = game:GetService("Players").LocalPlayer.Character
+            end
+        end
+    end)
+    mcbloxxer:AddButton("Block Tools", function()
+        for _,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+            if v:IsA("Tool") then
+                for i,c in pairs(v:GetDescendants()) do
+                    if c:IsA("SpecialMesh") then
+                        c:Destroy()
+                    end
+                end
+            end
+        end
+    end)
+    mcbloxxer:AddButton("Drop Tools", function()
+        for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+            if v:IsA("Tool") then
+                v.Parent = workspace
+            end
+        end
+    end)
+end
