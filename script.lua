@@ -285,6 +285,36 @@ ToolsHorizontal:AddButton("Give All", function()
         end
     end
 end)
+Tools:AddButton("Kill all w/ tool", function()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if v:IsA("Tool") and v.Parent:FindFirstChild("GiverScript") and v.Name == selectedItem then
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+        end
+    end
+    local tool = game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):WaitForChild(selectedItem)
+    tool.Parent = game:GetService("Players").LocalPlayer.Character
+    local RS = game:GetService("RunService").RenderStepped
+    local Tool = game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool")
+    local Handle = Tool and Tool:FindFirstChild("Handle")
+    for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
+        spawn(function()
+            while Tool and game:GetService("Players").LocalPlayer.Character and v.Character and Tool.Parent == game:GetService("Players").LocalPlayer.Character do
+                local Human = v.Character:FindFirstChildWhichIsA("Humanoid")
+                if not Human or Human.Health <= 0 then
+                    break
+                end
+                for _, v1 in ipairs(v.Character:GetChildren()) do
+                    v1 = ((v1:IsA("BasePart") and firetouchinterest(Handle, v1, 1, (RS:Wait() and nil) or firetouchinterest(Handle, v1, 0)) and nil) or v1) or v1
+                end
+            end
+        end)
+    end
+    wait(0.5)
+    game:GetService("Players").LocalPlayer.Character:BreakJoints()
+    game:GetService("Players").LocalPlayer.Character.Humanoid.Health = 0
+    tool:Destroy()
+end)
 
 local grabtoolsFunc
 Tools:AddSwitch("Equip dropped items", function(on)
