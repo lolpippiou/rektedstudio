@@ -268,29 +268,29 @@ if workspace:FindFirstChild("McBloxxer") then
             fireclickdetector(game:GetService("Workspace").McBloxxer.Kitchen.Cheeseburger.Giver.ClickDetector)
         end
     end)
-    mcbloxxer:AddButton("Equip Tools", function()
-        for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
-            if v:IsA("Tool") then
-                v.Parent = game:GetService("Players").LocalPlayer.Character
-            end
+end
+Tools:AddButton("Equip Tools", function()
+    for i,v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+        if v:IsA("Tool") then
+            v.Parent = game:GetService("Players").LocalPlayer.Character
         end
-    end)
-    mcbloxxer:AddButton("Block Tools", function()
-        for _,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-            if v:IsA("Tool") then
-                for i,c in pairs(v:GetDescendants()) do
-                    if c:IsA("SpecialMesh") then
-                        c:Destroy()
-                    end
+    end
+end)
+Tools:AddButton("Block Tools", function()
+    for _,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Tool") then
+            for i,c in pairs(v:GetDescendants()) do
+                if c:IsA("SpecialMesh") then
+                    c:Destroy()
                 end
             end
         end
-    end)
-    mcbloxxer:AddButton("Drop Tools", function()
-        for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-            if v:IsA("Tool") then
-                v.Parent = workspace
-            end
+    end
+end)
+Tools:AddButton("Drop Tools", function()
+    for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Tool") then
+            v.Parent = workspace
         end
-    end)
-end
+    end
+end)
