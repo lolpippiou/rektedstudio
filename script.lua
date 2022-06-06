@@ -294,3 +294,11 @@ Tools:AddButton("Drop Tools", function()
         end
     end
 end)
+Tools:AddButton("Delete All (BTools needed)", function()
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Part") then
+            game:GetService("Players").LocalPlayer.Backpack.Hammer.MouseDown:FireServer(v)
+            wait()
+        end
+    end
+end)
