@@ -16,6 +16,7 @@ local Window = library:AddWindow(name, WindowOptions)
 local Credits = Window:AddTab("Credits")
 local Fighting = Window:AddTab("Fighting Games")
 local Universal = Window:AddTab("Universal")
+local Tools = Window:AddTab("Tool Cheats")
 
 Credits:AddLabel("Created by team c00lkidd")
 Credits:AddLabel("https://youtube.com/teamc00lkidd1")
@@ -178,13 +179,9 @@ Universal:AddSwitch("NoClip", function(on)
     end
 end)
 
-local Dropdown = Universal:AddDropdown("Give Tool", function(item)
-    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
-        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == item and v.Parent:FindFirstChild("GiverScript") then
-            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
-            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
-        end
-    end
+local selectedItem
+local Dropdown = Tools:AddDropdown("Give Tool", function(item)
+    selectedItem = item
 end)
 
 for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
@@ -192,3 +189,37 @@ for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
         Dropdown:Add(v.Name)
     end
 end
+
+local ToolsHorizontal = Tools:AddHorizontalAlignment()
+ToolsHorizontal:AddButton("Give Tool", function()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == selectedItem and v.Parent:FindFirstChild("GiverScript") then
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+            firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+        end
+    end
+end)
+ToolsHorizontal:AddButton("Give Tool x10", function()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == selectedItem and v.Parent:FindFirstChild("GiverScript") then
+            local cooldown = v.Parent.GiverScript:FindFirstChild("Cooldown").Value + 0.2
+            for i = 1, 10 do
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+                wait(cooldown)
+            end
+        end
+    end
+end)
+ToolsHorizontal:AddButton("Give Tool x100", function()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == selectedItem and v.Parent:FindFirstChild("GiverScript") then
+            local cooldown = v.Parent.GiverScript:FindFirstChild("Cooldown").Value + 0.2
+            for i = 1, 100 do
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+                wait(cooldown)
+            end
+        end
+    end
+end)
