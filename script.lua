@@ -179,11 +179,119 @@ Universal:AddSwitch("NoClip", function(on)
     end
 end)
 
+function getRoot(char)
+	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
+	return rootPart
+end
+
+local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+local FLYING = false
+
+Universal:AddSwitch("Fly", function(on)
+    if on then
+        FLYING = false
+        if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+        if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+            game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+        end
+        pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Custom end)
+        wait()
+        repeat wait() until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and getRoot(game:GetService("Players").LocalPlayer.Character) and game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        repeat wait() until mouse
+        if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+        
+        local T = getRoot(game:GetService("Players").LocalPlayer.Character)
+        local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+        local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+        local SPEED = 0
+    
+        local function FLY()
+            FLYING = true
+            local BG = Instance.new("BodyGyro")
+            local BV = Instance.new("BodyVelocity")
+            BG.P = 9e4
+            BG.Parent = T
+            BV.Parent = T
+            BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BG.cframe = T.CFrame
+            BV.velocity = Vector3.new(0, 0, 0)
+            BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+            spawn(function()
+                repeat wait()
+                    if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                        game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
+                    end
+                    if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+                        SPEED = 50
+                    elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
+                        SPEED = 0
+                    end
+                    if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
+                        BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+                        lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+                    elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
+                        BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+                    else
+                        BV.velocity = Vector3.new(0, 0, 0)
+                    end
+                    BG.cframe = workspace.CurrentCamera.CoordinateFrame
+                until not FLYING
+                CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                SPEED = 0
+                BG:Destroy()
+                BV:Destroy()
+                if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+                end
+            end)
+        end
+        flyKeyDown = mouse.KeyDown:connect(function(KEY)
+            if KEY:lower() == 'w' then
+                CONTROL.F = 1
+            elseif KEY:lower() == 's' then
+                CONTROL.B = - 1
+            elseif KEY:lower() == 'a' then
+                CONTROL.L = - 1
+            elseif KEY:lower() == 'd' then 
+                CONTROL.R = 1
+            elseif KEY:lower() == 'e' then
+                CONTROL.Q = 2
+            elseif KEY:lower() == 'q' then
+                CONTROL.E = -2
+            end
+        end)
+        flyKeyUp = mouse.KeyUp:Connect(function(KEY)
+            if KEY:lower() == 'w' then
+                CONTROL.F = 0
+            elseif KEY:lower() == 's' then
+                CONTROL.B = 0
+            elseif KEY:lower() == 'a' then
+                CONTROL.L = 0
+            elseif KEY:lower() == 'd' then
+                CONTROL.R = 0
+            elseif KEY:lower() == 'e' then
+                CONTROL.Q = 0
+            elseif KEY:lower() == 'q' then
+                CONTROL.E = 0
+            end
+        end)
+        FLY()
+    else
+        FLYING = false
+        if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+        if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+            game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+        end
+        pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Custom end)
+    end
+end)
+
 function FindAvailableTeams()
 	local AvailableTeams = {}
 	
 	for _, Part in ipairs(workspace:GetDescendants()) do
-		if (Part:IsA("SpawnLocation") and Part.AllowTeamChangeOnTouch) then -- find team, should we get only one spawn or not
+		if (Part:IsA("SpawnLocation") and Part.AllowTeamChangeOnTouch) then
 			local Color = Part.TeamColor
 			
 			for _, Team in ipairs(game:GetService("Teams"):GetChildren()) do
@@ -281,6 +389,29 @@ ToolsHorizontal:AddButton("Give All", function()
         if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Parent:FindFirstChild("GiverScript") then
             firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
             firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+        end
+    end
+end)
+Tools:AddSwitch("ESP to Tool", function(on)
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == selectedItem and v.Parent:FindFirstChild("GiverScript") then
+            if on then
+                local a = Instance.new("BoxHandleAdornment")
+                a.Name = selectedItem
+                a.Parent = v.Parent
+                a.Adornee = v.Parent
+                a.AlwaysOnTop = true
+                a.ZIndex = 10
+                a.Size = v.Parent.Size
+                a.Transparency = 0.5
+                a.Color = BrickColor.new("Really red")
+            else
+                for i,v in pairs(v.Parent:GetChildren()) do
+                    if v:IsA("BoxHandleAdornment") then
+                        v:Destroy()
+                    end
+                end
+            end
         end
     end
 end)
