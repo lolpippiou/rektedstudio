@@ -204,10 +204,9 @@ local spawns = Universal:AddDropdown("Join Team", function(name)
 	
             local function MoveSpawn()
                 local Clone = SpawnPoint:Clone()
-                
                 SpawnPoint.CanCollide = false
                 SpawnPoint.Transparency = 1
-                SpawnPoint.CFrame = LocalPlayer.Character.Torso.CFrame
+                SpawnPoint.CFrame = game:GetService("Players").LocalPlayer.Character.Torso.CFrame
                 wait()
                 SpawnPoint.CFrame = Clone.CFrame
                 SpawnPoint.Transparency = Clone.Transparency
@@ -285,7 +284,7 @@ ToolsHorizontal:AddButton("Give All", function()
         end
     end
 end)
-Tools:AddButton("Kill all w/ tool", function()
+Tools:AddButton("Kill All (Sword)", function()
     for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
         if v:IsA("Tool") and v.Parent:FindFirstChild("GiverScript") and v.Name == selectedItem then
             firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
