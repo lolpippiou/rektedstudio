@@ -440,10 +440,6 @@ Tools:AddButton("Kill All (Sword)", function()
             end
         end)
     end
-    wait(0.5)
-    game:GetService("Players").LocalPlayer.Character:BreakJoints()
-    game:GetService("Players").LocalPlayer.Character.Humanoid.Health = 0
-    tool:Destroy()
 end)
 
 local grabtoolsFunc
