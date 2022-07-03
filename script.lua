@@ -441,6 +441,26 @@ Tools:AddButton("Kill All (Sword)", function()
         end)
     end
 end)
+Tools:AddButton("Fire on All", function()
+    local players = game:GetService("Players"):GetPlayers()
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if (v:IsA("Tool") or v:IsA("HopperBin")) and v.Name == selectedItem and v.Parent:FindFirstChild("GiverScript") then
+            local cooldown = v.Parent.GiverScript:FindFirstChild("Cooldown").Value + 0.2
+            for i = 1, #players do
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 0)
+                firetouchinterest(game:GetService("Players").LocalPlayer.Character:FindFirstChild("Torso"), v.Parent, 1)
+                wait(cooldown)
+            end
+        end
+    end
+    wait()
+    for i, v in pairs(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("Backpack"):GetChildren()) do
+        if v.Name == selectedItem then
+            v:FindFirstChild("Fire"):FireServer(players[i].Character.Torso - Vector3.new(0, 3, 0))
+            wait()
+        end
+    end
+end)
 
 local grabtoolsFunc
 Tools:AddSwitch("Equip dropped items", function(on)
@@ -503,10 +523,19 @@ Tools:AddButton("Drop Tools", function()
         end
     end
 end)
-Tools:AddButton("Delete All (BTools needed)", function()
+Tools:AddButton("Delete All (Delete Tool)", function()
     for i,v in pairs(workspace:GetDescendants()) do
-        if v:IsA("Part") and v.Locked == false then
+        if v:IsA("BasePart") and v.Locked == false then
             game:GetService("Players").LocalPlayer.Backpack.Hammer.MouseDown:FireServer(v)
+        end
+    end
+end)
+Tools:AddButton("Delete All (Move Tool)", function()
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") and v.Locked == false then
+            game:GetService("Players").LocalPlayer.Backpack.Carry.MouseDown:FireServer(v)
+            game:GetService("Players").LocalPlayer.Backpack.Carry.Move:FireServer(v, CFrame.new(Vector3.new(math.huge, 0, math.huge)))
+            game:GetService("Players").LocalPlayer.Backpack.Carry.MouseUp:FireServer()
         end
     end
 end)
