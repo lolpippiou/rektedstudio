@@ -287,6 +287,10 @@ Universal:AddSwitch("Fly", function(on)
     end
 end)
 
+Universal:AddSwitch("Fling", function(on)
+    
+end)
+
 function FindAvailableTeams()
 	local AvailableTeams = {}
 	
@@ -339,6 +343,18 @@ end)
 for Team, SpawnPoint in pairs(FindAvailableTeams()) do
     spawns:Add(Team.Name)
 end
+
+Universal:AddSwitch("Spam Sounds", function(on)
+    _G.SpammingSounds = on
+    while _G.SpammingSounds do
+        for _, sound in next, workspace:GetDescendants() do
+            if sound:IsA("Sound") then
+                sound:Play()
+            end
+        end
+        wait(0.5)
+    end
+end)
 
 local selectedItem
 local Dropdown = Tools:AddDropdown("Give Tool", function(item)
