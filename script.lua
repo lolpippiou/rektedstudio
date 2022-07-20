@@ -305,23 +305,23 @@ Universal:AddSwitch("Fling", function(on)
         z3.Name="Humanoid"
         z3.Parent = prt
         z1.Position = Vector3.new(0,9999,0)
-        game:GetService("Players").LocalPlayer.Character=prt
+        game:GetService("Players").LocalPlayer.Character = prt
         wait(3)
-        game:GetService("Players").LocalPlayer.Character=ch
+        game:GetService("Players").LocalPlayer.Character = ch
         wait(3)
         local Hum = Instance.new("Humanoid")
         z2:Clone()
         Hum.Parent = game:GetService("Players").LocalPlayer.Character
-        local root =  getRoot(game:GetService("Players").LocalPlayer.Character)
+        local root = getRoot(game:GetService("Players").LocalPlayer.Character)
         for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-            if v ~= root and  v.Name ~= "Humanoid" then
+            if v ~= root and v.Name ~= "Humanoid" then
                 v:Destroy()
             end
         end
         root.Transparency = 0
         root.Color = Color3.new(1, 1, 1)
         local invisflingStepped
-        invisflingStepped = RunService.Stepped:Connect(function()
+        invisflingStepped = game:GetService("RunService").Stepped:Connect(function()
             if game:GetService("Players").LocalPlayer.Character and getRoot(game:GetService("Players").LocalPlayer.Character) then
                 getRoot(game:GetService("Players").LocalPlayer.Character).CanCollide = false
             else
